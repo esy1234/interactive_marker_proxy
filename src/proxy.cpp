@@ -30,7 +30,7 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 
-#include <tf/transform_listener.h>
+#include <tf2_ros/transform_listener.h>
 
 #include <interactive_markers/interactive_marker_client.h>
 #include <interactive_marker_proxy/GetInit.h>
@@ -42,7 +42,8 @@ class Proxy
 public:
   ros::NodeHandle nh_;
   ros::Publisher pub_;
-  tf::TransformListener tf_;
+  tf2_ros::Buffer tf_;
+  tf2_ros::TransformListener tf_listener_;
   interactive_markers::InteractiveMarkerClient client_;
   std::string topic_ns_;
   std::string target_frame_;
@@ -53,6 +54,7 @@ public:
   std::map<std::string, visualization_msgs::InteractiveMarker> int_markers_;
 
   Proxy(std::string target_frame, std::string topic_ns) :
+      tf_listener_(tf_),
       client_(tf_, target_frame, topic_ns), topic_ns_(topic_ns), target_frame_(target_frame)
   {
     ROS_INFO_STREAM("Subscribing to " << topic_ns);
